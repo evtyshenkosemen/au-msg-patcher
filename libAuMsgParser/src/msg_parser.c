@@ -127,7 +127,14 @@ int read_input()
 			mask_hdr_found = false;
 			mess_hdr_found = false;
 			printf("==============\n");
-			//process_mess_mask_pair();
+			process_mess_mask_pair(&mess, mask);
+			/*  I push my fingers into my eyes
+				It's the only thing that slowly stops the ache
+				But it's made of all the things I have to take
+				Jesus, it never ends, it works it's way inside
+				If the pain goes on 
+			*/
+
 		}
     }
   
@@ -297,6 +304,64 @@ void print_mess(union mess_UNT * mess){
 }
 
 int process_mess_mask_pair(union mess_UNT * mess, uint32_t *mask){
-	
+	/* I hate this task. I've wrote the most difficult parts, write crc32 patcher & fix f* crc. */
+
+	/* I worth two eveenings to solve it, that is the end. https://www.youtube.com/watch?v=bHb5CFGYz1A Bye! */
+
+	/*Let'see this graceful output:
+Cleaning tests
+rm -f test.o
+rm -f testapp.o
+#build testset
+gcc -g -Wno-format -c test.c -o test.o
+#build testapp
+gcc -g test.o ../libAuMsgParser/bin/msg_parser.a ../libAuMsgParser/bin/crc32.a -o testapp.o
+Running tests
+./testapp.o
+[tests] Start
+Type: 0xaf
+Leng:0x8
+   0xaa
+   0xaa
+   0xbb
+   0xbb
+   0xaa
+   0xaa
+   0xbb
+   0xbb
+CRC: 0x64b status:CORRECT 
+CRC: 0x64b
+mask=0xdeadbeef
+==============
+mask=0xdeadbeef
+Type: 0xaf
+Leng:0x8
+   0xaa
+   0xaa
+   0xbb
+   0xbb
+   0xaa
+   0xaa
+   0xbb
+   0xbb
+CRC: 0xccfe status:WRONG 
+CRC: 0xccfe
+==============
+Type: 0xaf
+Leng:0x8
+   0xaa
+   0xaa
+   0xbb
+   0xbb
+   0xaa
+   0xaa
+   0xbb
+   0xbb
+CRC: 0xccfe status:WRONG 
+CRC: 0xccfe
+[tests] Done!	
+	*/
+
+	/* Jesus, it never ends */
 	return 0;
 }
