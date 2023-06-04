@@ -16,9 +16,9 @@ clean:
 
 build:
 	#build testset
-	${CC} -Wno-format -c test.c -o test.o
+	${CC} -g -Wno-format -c test.c -o test.o
 	#build testapp
-	${CC} test.o ../libAuMsgParser/bin/msg_parser.a -o testapp.o
+	${CC} -g test.o ../libAuMsgParser/bin/msg_parser.a ../libAuMsgParser/bin/crc32.a -o testapp.o
 
 run:
 	@echo "${ccyellow}Running tests${ccend}"

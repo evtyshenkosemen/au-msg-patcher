@@ -1,0 +1,7 @@
+mess=AF08AAaaBBbbAAaaBBbb0000064b
+mask=DEADBEEF
+
+mask=DEADBEEF
+mess=AF08AAaaBBbbAAaaBBbb0000065b
+
+mask=DEADBEEFmess=AF08AAaaBBbbAAaaBBbbCCFE

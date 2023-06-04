@@ -1,6 +1,7 @@
 #ifndef TEST_H
 #define TEST_H
 #include "../libAuMsgParser/bin/msg_parser.h"
+#include "../libAuMsgParser/bin/crc32.h"
 #include "../libAuMsgParser/bin/autoconf.h"
 
 #define VERBOSE 0

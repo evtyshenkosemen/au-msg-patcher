@@ -16,16 +16,21 @@ checkconfig:
 build:autoconf
 	@echo "${ccgreen}Starting build${ccend}"
 
-	${CC} -c -fPIC -Wno-format ${SOURCE_DIR}/msg_parser.c -o ${BUILD_DIR}/msg_parser.o -I${INCLUDE_DIR}
+	${CC} -g -c -fPIC -Wno-format ${SOURCE_DIR}/msg_parser.c -o ${BUILD_DIR}/msg_parser.o -I${INCLUDE_DIR}
 
 	#pack dynamic lib
-	${CC} -shared -o ${BUILD_DIR}/msg_parser.so ${BUILD_DIR}/msg_parser.o
+	#${CC} -g -shared -o ${BUILD_DIR}/msg_parser.so ${BUILD_DIR}/msg_parser.o
 	
 	#pack static lib
 	${AR} rcs ${BUILD_DIR}/msg_parser.a ${BUILD_DIR}/msg_parser.o
 
+	#build crc32 lib
+	${CC} -g -c -fPIC -Wno-format ${SOURCE_DIR}/crc32.c -o ${BUILD_DIR}/crc32.o -I${INCLUDE_DIR}
+	${AR} rcs ${BUILD_DIR}/crc32.a ${BUILD_DIR}/crc32.o
+
 	#spice up  with headers
 	cp ${INCLUDE_DIR}/msg_parser.h ${BUILD_DIR}/msg_parser.h
+	cp ${INCLUDE_DIR}/crc32.h ${BUILD_DIR}/crc32.h
 	cp ${INCLUDE_DIR}/autoconf.h ${BUILD_DIR}/autoconf.h
 
 	@echo "${ccgreen}Build${ccend}"

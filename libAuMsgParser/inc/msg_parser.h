@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "autoconf.h"
+#include "crc32.h"
 
 
 #define IN_FILE_NAME     "data_in.txt"
@@ -26,28 +27,29 @@
 
 */
 
-typedef struct __attribute__((__packed__)) _msg_h
+typedef struct _msg_h
 {
     uint8_t    type;
     uint8_t    length;
 }msg_hdr_STC;
-typedef struct __attribute__((__packed__)) _msg_t
+typedef struct _msg_t
 {
     msg_hdr_STC    header;
     uint32_t       tetrad[63]; /* 252 / 4 = 63 */
-    uint16_t       crc32;  
+    crc32_t        crc32;  
 }msg_tetrads_STC;
 
-typedef struct __attribute__((__packed__)) _msg_b
+typedef struct _msg_b
 {
     msg_hdr_STC    header;
     uint8_t        data[252];
-    uint16_t       crc32;
+    crc32_t        crc32;
 } msg_bytes_STC;
 
 union mess_UNT {
     msg_tetrads_STC    per_tetrad;
     msg_bytes_STC      per_byte;
+    uint8_t            bytes[258];    
 };
 
 /* public functions */
@@ -56,6 +58,8 @@ int read_input();
 int parse_mess(FILE* mess_PTR, union mess_UNT * mess);
 int parse_mess_header(FILE* mess_PTR, union mess_UNT * mess);
 int parse_mess_data(FILE* mess_PTR, union mess_UNT * mess);
+int parse_mask(FILE* mess_PTR, uint32_t *mask);
+
 void print_mess(union mess_UNT * mess);
 
 

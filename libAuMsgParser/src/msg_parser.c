@@ -4,6 +4,7 @@
 #include <memory.h>
 #include <stdbool.h>
 #include "msg_parser.h"
+#include "crc32.h"
 
 /**
     \file
@@ -63,6 +64,7 @@ int read_input()
 	uint8_t mask_hdr_next = 0;
 
 	union mess_UNT mess;
+	uint32_t       mask;
 
     FILE* fptr1;
     char c;
@@ -114,8 +116,18 @@ int read_input()
 				return ERR_MASK_DUPLICATE_FOUND;
 			}
 
+			parse_mask(fptr1, &mask);
+			printf("mask=0x%x\n",mask);
+
 			mask_hdr_found = true;
 			mask_hdr_next=0;
+		}
+
+		if(mask_hdr_found && mess_hdr_found){
+			mask_hdr_found = false;
+			mess_hdr_found = false;
+			printf("==============\n");
+			//process_mess_mask_pair();
 		}
     }
   
@@ -249,6 +261,29 @@ int parse_mess(FILE* mess_PTR, union mess_UNT * mess){
 	return 0;
 }
 
+crc32_t check_sum_mess(union mess_UNT * mess){
+	crc32_t mess_crc = 0;
+	crc32_recalculate_fake(mess, sizeof(mess->bytes)-sizeof(mess->per_byte.crc32), &mess_crc); /* free bytes problem using real CRC*/
+
+	return mess_crc;
+}
+
+int parse_mask(FILE* mess_PTR, uint32_t *mask){
+	int error;
+	char buf[CHARSET_ONE_BYTE_SIZE*sizeof(uint32_t)+1]={'\0'};
+
+	uint8_t bytes_read; /** \todo add a preprocessor err if you want to read more than uint8_t allows to address */
+    uint8_t bytes_to_read; 
+	/* parse crc */
+	bytes_to_read = CHARSET_ONE_BYTE_SIZE*sizeof(uint32_t);
+	bytes_read = fread(buf, 1, bytes_to_read, mess_PTR);
+	if(bytes_read != bytes_to_read)
+		return ERR_UNEXCEPTED_END_OF_FILE;
+	*mask = strtol(buf, NULL, 16); /* parse int from chars */ /** \todo add errcheck here */
+
+	return 0;
+}
+
 void print_mess(union mess_UNT * mess){
 	printf("Type: 0x%x\n", mess->per_byte.header.type);
 	printf("Leng:0x%x\n", mess->per_byte.header.length);
@@ -257,5 +292,11 @@ void print_mess(union mess_UNT * mess){
 	{
 		printf("   0x%x\n", mess->per_byte.data[i]);
 	}
-	printf("CRC: 0x%x\n", mess->per_byte.crc32);
+	printf("CRC: 0x%x status:%s \n", mess->per_byte.crc32, (check_sum_mess(mess) == mess->per_byte.crc32) ? "CORRECT" : "WRONG");
+
+}
+
+int process_mess_mask_pair(union mess_UNT * mess, uint32_t *mask){
+	
+	return 0;
 }
